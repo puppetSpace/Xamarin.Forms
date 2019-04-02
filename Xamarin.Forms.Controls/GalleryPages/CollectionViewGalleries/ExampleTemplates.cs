@@ -299,6 +299,76 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 			});
 		}
 
+		public static DataTemplate ExpandingTextTemplate()
+		{
+			return new DataTemplate(() =>
+			{
+				var templateLayout = new Grid
+				{
+					RowDefinitions = new RowDefinitionCollection
+					{
+						new RowDefinition() { Height = 200 },
+						new RowDefinition()
+					},
+					BackgroundColor = Color.LightGoldenrodYellow, 
+					Margin = 10
+				};
+
+				var frame = new Frame
+				{
+					HeightRequest = 100,
+					WidthRequest = 200,
+					HorizontalOptions = LayoutOptions.Center,
+					VerticalOptions = LayoutOptions.Center,
+					Margin = new Thickness(2, 5, 2, 2),
+					AutomationId = "frame",
+					BackgroundColor = Color.CadetBlue
+				};
+
+				var date = new Label
+				{
+					FontSize = 12,
+					HorizontalOptions = LayoutOptions.Fill,
+					VerticalOptions = LayoutOptions.Fill,
+					HorizontalTextAlignment = TextAlignment.Center,
+					VerticalTextAlignment = TextAlignment.Center,
+					Margin = new Thickness(2, 0, 2, 2)
+				};
+
+				date.SetBinding(Label.TextProperty, new Binding("Date"));
+
+				frame.Content = date;
+
+				var caption = new Label
+				{
+					FontSize = 12,
+					HorizontalOptions = LayoutOptions.Fill,
+					HorizontalTextAlignment = TextAlignment.Center,
+					Margin = new Thickness(2, 0, 2, 2),
+					LineBreakMode = LineBreakMode.WordWrap,
+					MaxLines = 10
+				};
+
+				caption.SetBinding(Label.TextProperty, new Binding("Caption"));
+
+				templateLayout.Children.Add(frame);
+				templateLayout.Children.Add(caption);
+
+				Grid.SetRow(caption, 1);
+
+				var tapGesture = new TapGestureRecognizer();
+				tapGesture.SetBinding(TapGestureRecognizer.CommandProperty, new Binding("Command"));
+				templateLayout.GestureRecognizers.Add(tapGesture);
+
+				var rootLayout = new StackLayout
+				{
+					Children = { templateLayout }
+				};
+
+				return rootLayout;
+			});
+		}
+
 		class IndexRequestConverter : IValueConverter
 		{
 			readonly int _cutoff;
