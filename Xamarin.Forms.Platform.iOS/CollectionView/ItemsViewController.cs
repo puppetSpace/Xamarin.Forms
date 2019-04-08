@@ -246,7 +246,7 @@ namespace Xamarin.Forms.Platform.iOS
 			_itemsView.AddLogicalChild(view);
 		}
 
-		internal void RemoveLogicalChild(UICollectionViewCell cell)
+		internal void PrepareCellForRemoval(UICollectionViewCell cell)
 		{
 			if (cell is TemplatedCell templatedCell)
 			{

@@ -5,7 +5,6 @@ using UIKit;
 
 namespace Xamarin.Forms.Platform.iOS
 {
-	// TODO hartez 2018/09/17 14:11:02 Should this be named "TemplateCell" instead of "TemplatedCell"?	
 	public abstract class TemplatedCell : ItemsViewCell
 	{
 		protected nfloat ConstrainedDimension;
@@ -37,10 +36,14 @@ namespace Xamarin.Forms.Platform.iOS
 			return layoutAttributes;
 		}
 
+		public override void PrepareForReuse()
+		{
+			base.PrepareForReuse();
+			ClearSubviews();
+		}
+
 		public void SetRenderer(IVisualElementRenderer renderer)
 		{
-			ClearSubviews();
-
 			VisualElementRenderer = renderer;
 			var nativeView = VisualElementRenderer.NativeView;
 
@@ -65,7 +68,6 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 			for (int n = ContentView.Subviews.Length - 1; n >= 0; n--)
 			{
-				// TODO hartez 2018/09/07 16:14:43 Does this also need to clear the constraints?	
 				ContentView.Subviews[n].RemoveFromSuperview();
 			}
 		}
