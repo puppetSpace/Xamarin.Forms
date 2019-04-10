@@ -18,7 +18,8 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 
 				var image = new Image
 				{
-					HeightRequest = 100, WidthRequest = 100,
+					HeightRequest = 100,
+					WidthRequest = 100,
 					HorizontalOptions = LayoutOptions.Center,
 					VerticalOptions = LayoutOptions.Center,
 					Margin = new Thickness(2, 5, 2, 2),
@@ -36,7 +37,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 				};
 
 				caption.SetBinding(Label.TextProperty, new Binding("Caption"));
-				
+
 				templateLayout.Children.Add(image);
 				templateLayout.Children.Add(caption);
 
@@ -52,7 +53,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 			{
 				var templateLayout = new Grid
 				{
-					RowDefinitions = new RowDefinitionCollection { new RowDefinition(), new RowDefinition {Height = GridLength.Auto} },
+					RowDefinitions = new RowDefinitionCollection { new RowDefinition(), new RowDefinition { Height = GridLength.Auto } },
 					WidthRequest = 280,
 					HeightRequest = 310,
 				};
@@ -78,7 +79,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 				};
 
 				caption.SetBinding(Label.TextProperty, new Binding("Caption"));
-				
+
 				templateLayout.Children.Add(image);
 				templateLayout.Children.Add(caption);
 
@@ -120,7 +121,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 				};
 
 				caption.SetBinding(Label.TextProperty, new Binding("Caption"));
-				
+
 				grid.Children.Add(image);
 				grid.Children.Add(caption);
 
@@ -132,7 +133,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 					Content = grid
 				};
 
-				return  frame;
+				return frame;
 			});
 		}
 
@@ -166,12 +167,13 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 				{
 					HorizontalOptions = LayoutOptions.Fill,
 					HorizontalTextAlignment = TextAlignment.Center,
-					HeightRequest = 40, WidthRequest = 100,
+					HeightRequest = 40,
+					WidthRequest = 100,
 					BackgroundColor = Color.Crimson,
 					Text = "Caption"
 				};
 
-				caption.SetBinding(Label.TextProperty, new Binding("Index", stringFormat:"Index {0}"));
+				caption.SetBinding(Label.TextProperty, new Binding("Index", stringFormat: "Index {0}"));
 
 				templateLayout.Children.Add(image);
 				templateLayout.Children.Add(caption);
@@ -190,7 +192,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 				{
 					BackgroundColor = Color.Bisque,
 
-					RowDefinitions = new RowDefinitionCollection { new RowDefinition(), new RowDefinition {Height = GridLength.Auto} },
+					RowDefinitions = new RowDefinitionCollection { new RowDefinition(), new RowDefinition { Height = GridLength.Auto } },
 					WidthRequest = 100,
 					HeightRequest = 140
 				};
@@ -211,13 +213,14 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 				{
 					HorizontalOptions = LayoutOptions.Fill,
 					HorizontalTextAlignment = TextAlignment.Center,
-					HeightRequest = 40, WidthRequest = 100,
+					HeightRequest = 40,
+					WidthRequest = 100,
 					BackgroundColor = Color.Crimson,
 					Text = "Caption"
 				};
 
 				caption.SetBinding(Label.TextProperty, new Binding("Date", stringFormat: "{0:d}"));
-				
+
 				templateLayout.Children.Add(image);
 				templateLayout.Children.Add(caption);
 
@@ -268,7 +271,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 				return templateLayout;
 			});
 		}
-		
+
 		public static DataTemplate VariableSizeTemplate()
 		{
 			var indexHeightConverter = new IndexRequestConverter(3, 50, 150);
@@ -299,7 +302,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 			});
 		}
 
-		public static DataTemplate ExpandingTextTemplate()
+		public static DataTemplate DynamicTextTemplate()
 		{
 			return new DataTemplate(() =>
 			{
@@ -307,10 +310,11 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 				{
 					RowDefinitions = new RowDefinitionCollection
 					{
-						new RowDefinition() { Height = 200 },
+						new RowDefinition() { Height = GridLength.Auto },
+						new RowDefinition() { Height = GridLength.Auto },
 						new RowDefinition() { Height = GridLength.Auto }
 					},
-					BackgroundColor = Color.LightGoldenrodYellow, 
+					BackgroundColor = Color.LightGoldenrodYellow,
 					Margin = 10
 				};
 
@@ -351,14 +355,25 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 
 				caption.SetBinding(Label.TextProperty, new Binding("Caption"));
 
+				var more = new Button { Text = "More Text" };
+				var less = new Button { Text = "Less Text" };
+
+				var buttonLayout = new StackLayout
+				{
+					Children = { more, less },
+					Orientation = StackOrientation.Horizontal,
+					HorizontalOptions = LayoutOptions.Center					
+				};
+
+				more.SetBinding(Button.CommandProperty, new Binding("MoreCommand"));
+				less.SetBinding(Button.CommandProperty, new Binding("LessCommand"));
+
 				templateLayout.Children.Add(frame);
 				templateLayout.Children.Add(caption);
+				templateLayout.Children.Add(buttonLayout);
 
-				Grid.SetRow(caption, 1);
-
-				var tapGesture = new TapGestureRecognizer();
-				tapGesture.SetBinding(TapGestureRecognizer.CommandProperty, new Binding("Command"));
-				templateLayout.GestureRecognizers.Add(tapGesture);
+				Grid.SetRow(buttonLayout, 1);
+				Grid.SetRow(caption, 2);
 
 				var rootLayout = new StackLayout
 				{
@@ -367,6 +382,11 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 
 				return rootLayout;
 			});
+		}
+
+		private static void More_Clicked(object sender, EventArgs e)
+		{
+			throw new NotImplementedException();
 		}
 
 		class IndexRequestConverter : IValueConverter

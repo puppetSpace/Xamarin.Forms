@@ -19,7 +19,7 @@
 				Text = "Tapping the items below should update their text, and the items should expand to accommodate the larger text."
 			};
 
-			var itemTemplate = ExampleTemplates.ExpandingTextTemplate();
+			var itemTemplate = ExampleTemplates.DynamicTextTemplate();
 
 			var collectionView = new CollectionView
 			{

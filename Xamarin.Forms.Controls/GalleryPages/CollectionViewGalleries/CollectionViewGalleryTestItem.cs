@@ -26,7 +26,8 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 		public string Image { get; set; }
 
 		public int Index { get; set; }
-		public ICommand Command { get; set; }
+		public ICommand MoreCommand { get; set; }
+		public ICommand LessCommand { get; set; }
 
 		public CollectionViewGalleryTestItem(DateTime date, string caption, string image, int index)
 		{
@@ -35,7 +36,18 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 			Image = image;
 			Index = index;
 
-			Command = new Command(() => Caption += " Lorem ipsum dolor sit amet, qui eleifend adversarium ei, pro tamquam pertinax inimicus ut. Quis assentior ius no, ne vel modo tantas omnium, sint labitur id nec. Mel ad cetero repudiare definiebas, eos sint placerat cu.");
+			var text = " Lorem ipsum dolor sit amet, qui eleifend adversarium ei, pro tamquam pertinax inimicus ut. Quis assentior ius no, ne vel modo tantas omnium, sint labitur id nec. Mel ad cetero repudiare definiebas, eos sint placerat cu.";
+
+			MoreCommand = new Command(() => Caption += text);
+			LessCommand = new Command(() =>
+			{
+				var last = Caption.LastIndexOf(text);
+				if (last > 0)
+				{
+					Caption = Caption.Substring(0, last);
+				}
+
+			});
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
