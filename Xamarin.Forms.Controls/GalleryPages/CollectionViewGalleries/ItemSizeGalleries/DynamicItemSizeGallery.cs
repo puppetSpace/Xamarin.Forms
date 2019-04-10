@@ -16,7 +16,7 @@
 
 			var instructions = new Label
 			{
-				Text = "Tapping the items below should update their text, and the items should expand to accomodate the larger text."
+				Text = "Tapping the items below should update their text, and the items should expand to accommodate the larger text."
 			};
 
 			var itemTemplate = ExampleTemplates.ExpandingTextTemplate();

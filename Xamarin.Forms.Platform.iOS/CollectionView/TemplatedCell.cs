@@ -24,16 +24,22 @@ namespace Xamarin.Forms.Platform.iOS
 		public override UICollectionViewLayoutAttributes PreferredLayoutAttributesFittingAttributes(
 			UICollectionViewLayoutAttributes layoutAttributes)
 		{
-			var nativeView = VisualElementRenderer.NativeView;
+			var preferredAttributes = base.PreferredLayoutAttributesFittingAttributes(layoutAttributes);
 
+			// Measure this cell (including the Forms element)
 			var size = Measure();
 
+			// Update the size of the root view to accommodate the Forms element
+			var nativeView = VisualElementRenderer.NativeView;
 			nativeView.Frame = new CGRect(CGPoint.Empty, size);
+
+			// Layout the Forms element 
 			VisualElementRenderer.Element.Layout(nativeView.Frame.ToRectangle());
 
-			layoutAttributes.Frame = nativeView.Frame;
+			// Adjust the preferred attributes to include space for the Forms element
+			preferredAttributes.Frame = new CGRect(preferredAttributes.Frame.Location, size);
 
-			return layoutAttributes;
+			return preferredAttributes;
 		}
 
 		public override void PrepareForReuse()
@@ -48,6 +54,8 @@ namespace Xamarin.Forms.Platform.iOS
 			var nativeView = VisualElementRenderer.NativeView;
 
 			InitializeContentConstraints(nativeView);
+
+			renderer.Element.MeasureInvalidated += MeasureInvalidated;
 		}
 
 		protected void Layout(CGSize constraints)
@@ -83,10 +91,36 @@ namespace Xamarin.Forms.Platform.iOS
 
 				if (element != null)
 				{
-					VisualStateManager.GoToState(element, value 
-						? VisualStateManager.CommonStates.Selected 
+					VisualStateManager.GoToState(element, value
+						? VisualStateManager.CommonStates.Selected
 						: VisualStateManager.CommonStates.Normal);
 				}
+			}
+		}
+
+		void MeasureInvalidated(object sender, EventArgs args)
+		{
+			if (VisualElementRenderer?.Element == null)
+			{
+				return;
+			}
+
+			var bounds = VisualElementRenderer.Element.Bounds;
+
+			if (bounds.Width <= 0 || bounds.Height <= 0)
+			{
+				return;
+			}
+
+			SetNeedsUpdateConstraints();
+			OnContentSizeChanged();
+		}
+
+		public void PrepareForRemoval()
+		{
+			if (VisualElementRenderer?.Element != null)
+			{
+				VisualElementRenderer.Element.MeasureInvalidated -= MeasureInvalidated;
 			}
 		}
 	}

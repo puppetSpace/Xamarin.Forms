@@ -122,6 +122,16 @@ namespace Xamarin.Forms.Platform.iOS
 			return shouldInvalidate;
 		}
 
+		public override bool ShouldInvalidateLayout(UICollectionViewLayoutAttributes preferredAttributes, UICollectionViewLayoutAttributes originalAttributes)
+		{
+			if (preferredAttributes.Bounds != originalAttributes.Bounds)
+			{
+				return true;
+			}
+
+			return base.ShouldInvalidateLayout(preferredAttributes, originalAttributes);
+		}
+
 		protected void DetermineCellSize()
 		{
 			if (GetPrototype == null)

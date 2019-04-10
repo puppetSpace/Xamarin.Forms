@@ -308,7 +308,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 					RowDefinitions = new RowDefinitionCollection
 					{
 						new RowDefinition() { Height = 200 },
-						new RowDefinition()
+						new RowDefinition() { Height = GridLength.Auto }
 					},
 					BackgroundColor = Color.LightGoldenrodYellow, 
 					Margin = 10

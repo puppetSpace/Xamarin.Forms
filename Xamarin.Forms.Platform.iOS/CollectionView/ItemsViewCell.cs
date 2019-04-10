@@ -7,6 +7,8 @@ namespace Xamarin.Forms.Platform.iOS
 {
 	public abstract class ItemsViewCell : UICollectionViewCell
 	{
+		public event EventHandler ContentSizeChanged;
+
 		[Export("initWithFrame:")]
 		protected ItemsViewCell(CGRect frame) : base(frame)
 		{
@@ -23,12 +25,27 @@ namespace Xamarin.Forms.Platform.iOS
 
 		protected void InitializeContentConstraints(UIView nativeView)
 		{
-			ContentView.AddSubview(nativeView);
 			ContentView.TranslatesAutoresizingMaskIntoConstraints = false;
+			nativeView.TranslatesAutoresizingMaskIntoConstraints = false;
+
+			ContentView.AddSubview(nativeView);
+
+			// We want the cell to be the same size as the ContentView
+			ContentView.TopAnchor.ConstraintEqualTo(TopAnchor).Active = true;
+			ContentView.BottomAnchor.ConstraintEqualTo(BottomAnchor).Active = true;
+			ContentView.LeadingAnchor.ConstraintEqualTo(LeadingAnchor).Active = true;
+			ContentView.TrailingAnchor.ConstraintEqualTo(TrailingAnchor).Active = true;
+
+			// And we want the ContentView to be the same size as the root renderer for the Forms element
 			ContentView.TopAnchor.ConstraintEqualTo(nativeView.TopAnchor).Active = true;
 			ContentView.BottomAnchor.ConstraintEqualTo(nativeView.BottomAnchor).Active = true;
 			ContentView.LeadingAnchor.ConstraintEqualTo(nativeView.LeadingAnchor).Active = true;
 			ContentView.TrailingAnchor.ConstraintEqualTo(nativeView.TrailingAnchor).Active = true;
+		}
+
+		protected void OnContentSizeChanged()
+		{
+			ContentSizeChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		public abstract void ConstrainTo(nfloat constant);
