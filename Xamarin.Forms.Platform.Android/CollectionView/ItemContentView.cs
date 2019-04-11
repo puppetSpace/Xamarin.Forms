@@ -15,10 +15,17 @@ namespace Xamarin.Forms.Platform.Android
 		{
 			Content = CreateRenderer(view, Context);
 			AddView(Content.View);
+			Content.Element.MeasureInvalidated += ElementMeasureInvalidated;
+		}
+
+		private void ElementMeasureInvalidated(object sender, System.EventArgs e)
+		{
+			RequestLayout();
 		}
 
 		internal void Recycle()
 		{
+			Content.Element.MeasureInvalidated -= ElementMeasureInvalidated;
 			RemoveView(Content.View);
 			Content = null;
 		}

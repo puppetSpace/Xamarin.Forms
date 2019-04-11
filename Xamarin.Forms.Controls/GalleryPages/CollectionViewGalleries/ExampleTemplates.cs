@@ -320,7 +320,7 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 
 				var frame = new Frame
 				{
-					HeightRequest = 100,
+					HeightRequest = 50,
 					WidthRequest = 200,
 					HorizontalOptions = LayoutOptions.Center,
 					VerticalOptions = LayoutOptions.Center,
