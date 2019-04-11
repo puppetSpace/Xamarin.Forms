@@ -7,7 +7,7 @@ namespace Xamarin.Forms.Platform.iOS
 {
 	public abstract class ItemsViewCell : UICollectionViewCell
 	{
-		public event EventHandler ContentSizeChanged;
+		public event EventHandler<EventArgs> ContentSizeChanged;
 
 		[Export("initWithFrame:")]
 		protected ItemsViewCell(CGRect frame) : base(frame)
