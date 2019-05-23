@@ -10,6 +10,7 @@ namespace Xamarin.Forms
 		static Dictionary<string, RouteFactory> s_routes = new Dictionary<string, RouteFactory>();
 
 		internal const string ImplicitPrefix = "IMPL_";
+		const string _pathSeparator = "/";
 
 		internal static string GenerateImplicitRoute(string source)
 		{
@@ -21,7 +22,7 @@ namespace Xamarin.Forms
 		{
 			return source.StartsWith(ImplicitPrefix, StringComparison.Ordinal);
 		}
-		internal static bool IsImplicit(Element source)
+		internal static bool IsImplicit(BindableObject source)
 		{
 			return IsImplicit(GetRoute(source));
 		}
@@ -42,7 +43,7 @@ namespace Xamarin.Forms
 			return bindable.GetType().Name + ++s_routeCount;
 		}
 
-		public static string[] GetRouteKeys()
+		internal static string[] GetRouteKeys()
 		{
 			string[] keys = new string[s_routes.Count];
 			s_routes.Keys.CopyTo(keys, 0);
@@ -70,7 +71,7 @@ namespace Xamarin.Forms
 			return result;
 		}
 
-		public static string GetRoute(Element obj)
+		public static string GetRoute(BindableObject obj)
 		{
 			return (string)obj.GetValue(RouteProperty);
 		}
@@ -84,9 +85,23 @@ namespace Xamarin.Forms
 			return $"{source}/";
 		}
 
+		internal static Uri RemoveImplicit(Uri uri)
+		{
+			uri = ShellUriHandler.FormatUri(uri);
+
+			string[] parts = uri.OriginalString.TrimEnd(_pathSeparator[0]).Split(_pathSeparator[0]);
+
+			List<string> toKeep = new List<string>();
+			for (int i = 0; i < parts.Length; i++)
+				if (!IsImplicit(parts[i]))
+					toKeep.Add(parts[i]);
+
+			return new Uri(string.Join(_pathSeparator, toKeep), UriKind.Relative);
+		}
+
 		public static string FormatRoute(List<string> segments)
 		{
-			var route = FormatRoute(String.Join("/", segments));
+			var route = FormatRoute(String.Join(_pathSeparator, segments));
 			return route;
 		}
 
@@ -128,7 +143,7 @@ namespace Xamarin.Forms
 		static void ValidateRoute(string route)
 		{
 			if (string.IsNullOrWhiteSpace(route))
-				throw new ArgumentNullException("Route cannot be an empty string");
+				throw new ArgumentNullException(nameof(route), "Route cannot be an empty string");
 
 			var uri = new Uri(route, UriKind.RelativeOrAbsolute);
 

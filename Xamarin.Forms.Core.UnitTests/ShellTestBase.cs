@@ -12,7 +12,6 @@ namespace Xamarin.Forms.Core.UnitTests
 		[SetUp]
 		public override void Setup()
 		{
-			Device.SetFlags(new[] { Shell.ShellExperimental });
 			base.Setup();
 
 		}
@@ -24,7 +23,7 @@ namespace Xamarin.Forms.Core.UnitTests
 
 		}
 
-		protected Uri CreateUri(string uri) => new Uri(uri, UriKind.RelativeOrAbsolute);
+		protected Uri CreateUri(string uri) => ShellUriHandler.CreateUri(uri);
 
 		protected ShellSection MakeSimpleShellSection(string route, string contentRoute)
 		{
